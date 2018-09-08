@@ -47,6 +47,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
+            
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
             engine.Initialize(services);

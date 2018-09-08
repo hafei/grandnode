@@ -39,6 +39,7 @@ namespace Grand.Framework.Infrastructure
 
             //MVC routing
             application.UseGrandMvc();
+
         }
 
         /// <summary>

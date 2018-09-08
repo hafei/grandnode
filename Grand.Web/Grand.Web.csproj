@@ -24,6 +24,10 @@
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove=".dockerignore" />
+    <None Remove="Dockerfile" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="Views\Product\_AskQuestionOnProduct.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

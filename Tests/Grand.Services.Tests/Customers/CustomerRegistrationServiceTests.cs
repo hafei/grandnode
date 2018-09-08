@@ -153,15 +153,17 @@ namespace Grand.Services.Customers.Tests
                 null, null, _genericAttributeService, null,
                 _eventPublisher, _customerSettings, _commonSettings);
 
-            _customerRegistrationService = new CustomerRegistrationService(
-                _customerService,
-                _encryptionService,
-                _newsLetterSubscriptionService,
-                _localizationService,
-                _storeService,
-                _rewardPointsSettings,
-                _customerSettings,
-                null);
+            //_customerRegistrationService = new CustomerRegistrationService(
+            //    _customerService,
+            //    _encryptionService,
+            //    _newsLetterSubscriptionService,
+            //    _localizationService,
+            //    _storeService,
+            //    _rewardPointsSettings,
+            //    _customerSettings,
+            //    null);
+
+
         }
 
         [TestMethod()]
