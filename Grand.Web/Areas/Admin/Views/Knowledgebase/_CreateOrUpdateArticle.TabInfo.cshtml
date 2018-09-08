@@ -1,8 +1,7 @@
 ﻿@model KnowledgebaseArticleModel
 
 @Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
+<input asp-for="Id" type="hidden" />
 @(Html.LocalizedEditor<KnowledgebaseArticleModel, KnowledgebaseArticleLocalizedModel>("knowledbasearticle-info-localized",
 @<div class="form-horizontal">
      <div class="form-body">
@@ -58,6 +57,16 @@
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="DisplayOrder" />
                 <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AllowComments" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AllowComments" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AllowComments"></span>
             </div>
         </div>
         <div class="form-group">

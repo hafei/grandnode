@@ -952,6 +952,8 @@ namespace Grand.Services.Installation
 
             var knowledgesettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
             knowledgesettings.Enabled = false;
+            knowledgesettings.AllowNotRegisteredUsersToLeaveComments = true;
+            knowledgesettings.NotifyAboutNewArticleComments = false;
             _settingService.SaveSetting(knowledgesettings);
 
             #endregion
@@ -991,6 +993,7 @@ namespace Grand.Services.Installation
 
             InstallStringResources("EN_420_430.nopres.xml");
 
+            #region Admin search settings
             var adminSearchSettings = EngineContext.Current.Resolve<AdminSearchSettings>();
             adminSearchSettings.BlogsDisplayOrder = 0;
             adminSearchSettings.CategoriesDisplayOrder = 0;
@@ -1013,6 +1016,54 @@ namespace Grand.Services.Installation
             adminSearchSettings.SearchInMenu = true;
             adminSearchSettings.MenuDisplayOrder = -1;
             _settingService.SaveSetting(adminSearchSettings);
+            #endregion
+
+            #region Emails
+
+            var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "Knowledgebase.ArticleComment",
+                    Subject = "%Store.Name%. New article comment.",
+                    Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new article comment has been created for article \"%Article.ArticleTitle%\".</p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+
+            #endregion
+
+            #region Activity log
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "PublicStore.AddArticleComment",
+                Enabled = false,
+                Name = "Public store. Add article comment"
+            });
+            #endregion
+
+            #region Knowledgebase settings
+
+            var knowledgebaseSettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
+            knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = true;
+            knowledgebaseSettings.NotifyAboutNewArticleComments = false;
+            _settingService.SaveSetting(knowledgebaseSettings);
+            #endregion
+
+            #region Customer Personalize Product
+
+            var _customerProductRepository = EngineContext.Current.Resolve<IRepository<CustomerProduct>>();
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = false }));
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct_Unique", Unique = true }));
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

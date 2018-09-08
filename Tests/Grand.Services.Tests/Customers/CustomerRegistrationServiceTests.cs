@@ -9,6 +9,7 @@ using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,6 +24,7 @@ namespace Grand.Services.Customers.Tests
         private IRepository<CustomerHistoryPassword> _customerHistoryRepo;
         private IRepository<CustomerRole> _customerRoleRepo;
         private IRepository<CustomerProductPrice> _customerProductPriceRepo;
+        private IRepository<CustomerProduct> _customerProductRepo;
         private IRepository<CustomerRoleProduct> _customerRoleProductRepo;
         private IRepository<Order> _orderRepo;
         private IRepository<ForumPost> _forumPostRepo;
@@ -32,6 +34,7 @@ namespace Grand.Services.Customers.Tests
         private ICustomerService _customerService;
         private ICustomerRegistrationService _customerRegistrationService;
         private ILocalizationService _localizationService;
+        private IRewardPointsService _rewardPointsService;
         private CustomerSettings _customerSettings;
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private IEventPublisher _eventPublisher;
@@ -138,31 +141,33 @@ namespace Grand.Services.Customers.Tests
             _forumPostRepo = new Mock<IRepository<ForumPost>>().Object;
             _forumTopicRepo = new Mock<IRepository<ForumTopic>>().Object;
             _customerProductPriceRepo = new Mock<IRepository<CustomerProductPrice>>().Object;
+            _customerProductRepo = new Mock<IRepository<CustomerProduct>>().Object;
             _customerHistoryRepo = new Mock<IRepository<CustomerHistoryPassword>>().Object;
 
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
+            _rewardPointsService = new Mock<IRewardPointsService>().Object;
             _customerRoleProductRepo = new Mock<IRepository<CustomerRoleProduct>>().Object;
 
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
-            _customerService = new CustomerService(new GrandNullCache(), _customerRepo, _customerRoleRepo, _customerProductPriceRepo,
+            _customerService = new CustomerService(new GrandNullCache(), _customerRepo, _customerRoleRepo, _customerProductRepo, _customerProductPriceRepo,
                 _customerHistoryRepo,
                 _customerRoleProductRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, _genericAttributeService, null,
                 _eventPublisher, _customerSettings, _commonSettings);
 
-            //_customerRegistrationService = new CustomerRegistrationService(
-            //    _customerService,
-            //    _encryptionService,
-            //    _newsLetterSubscriptionService,
-            //    _localizationService,
-            //    _storeService,
-            //    _rewardPointsSettings,
-            //    _customerSettings,
-            //    null);
-
+            _customerRegistrationService = new CustomerRegistrationService(
+                _customerService,
+                _encryptionService,
+                _newsLetterSubscriptionService,
+                _localizationService,
+                _storeService,
+                _eventPublisher,
+                _rewardPointsSettings,
+                _customerSettings,
+                _rewardPointsService);
 
         }
 

@@ -1176,6 +1176,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.RecommendedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
                 model.SuggestedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsEnabled, storeScope);
                 model.SuggestedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
+                model.PersonalizedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope);
+                model.PersonalizedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PersonalizedProductsNumber, storeScope);
                 model.NewProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsNumber, storeScope);
                 model.NewProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsEnabled, storeScope);
                 model.CompareProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CompareProductsEnabled, storeScope);
@@ -1368,6 +1370,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
+
+            if (model.PersonalizedProductsEnabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope);
+
+            if (model.PersonalizedProductsNumber_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.PersonalizedProductsNumber, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.PersonalizedProductsNumber, storeScope);
+
 
             if (model.NewProductsNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NewProductsNumber, storeScope, false);
@@ -2666,6 +2679,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage = captchaSettings.ShowOnEmailProductToFriendPage;
             model.SecuritySettings.CaptchaShowOnAskQuestionPage = captchaSettings.ShowOnAskQuestionPage;
             model.SecuritySettings.CaptchaShowOnBlogCommentPage = captchaSettings.ShowOnBlogCommentPage;
+            model.SecuritySettings.CaptchaShowOnArticleCommentPage = captchaSettings.ShowOnArticleCommentPage;
             model.SecuritySettings.CaptchaShowOnNewsCommentPage = captchaSettings.ShowOnNewsCommentPage;
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
@@ -2742,7 +2756,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //knowledgebase
             var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
             model.KnowledgebaseSettings.Enabled = knowledgebaseSettings.Enabled;
-
+            model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments;
+            model.KnowledgebaseSettings.NotifyAboutNewArticleComments = knowledgebaseSettings.NotifyAboutNewArticleComments;
 
             return View(model);
         }
@@ -2948,6 +2963,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             captchaSettings.ShowOnAskQuestionPage = model.SecuritySettings.CaptchaShowOnAskQuestionPage;
             captchaSettings.ShowOnEmailProductToFriendPage = model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage;
             captchaSettings.ShowOnBlogCommentPage = model.SecuritySettings.CaptchaShowOnBlogCommentPage;
+            captchaSettings.ShowOnArticleCommentPage = model.SecuritySettings.CaptchaShowOnArticleCommentPage;
             captchaSettings.ShowOnNewsCommentPage = model.SecuritySettings.CaptchaShowOnNewsCommentPage;
             captchaSettings.ShowOnProductReviewPage = model.SecuritySettings.CaptchaShowOnProductReviewPage;
             captchaSettings.ShowOnApplyVendorPage = model.SecuritySettings.CaptchaShowOnApplyVendorPage;
@@ -3094,10 +3110,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Knowledgebase
             var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
             knowledgebaseSettings.Enabled = model.KnowledgebaseSettings.Enabled;
+            knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments;
+            knowledgebaseSettings.NotifyAboutNewArticleComments = model.KnowledgebaseSettings.NotifyAboutNewArticleComments;
+
             if (model.KnowledgebaseSettings.Enabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(knowledgebaseSettings, x => x.Enabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(knowledgebaseSettings, x => x.Enabled, storeScope);
+
+            if (model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(knowledgebaseSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(knowledgebaseSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
+
+            if (model.KnowledgebaseSettings.NotifyAboutNewArticleComments_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(knowledgebaseSettings, x => x.NotifyAboutNewArticleComments, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(knowledgebaseSettings, x => x.NotifyAboutNewArticleComments, storeScope);
 
             //now clear cache
             _cacheManager.Clear();
