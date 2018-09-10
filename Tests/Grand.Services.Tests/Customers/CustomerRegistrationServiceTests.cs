@@ -168,6 +168,7 @@ namespace Grand.Services.Customers.Tests
                 _rewardPointsSettings,
                 _customerSettings,
                 _rewardPointsService);
+
         }
 
         [TestMethod()]
