@@ -54,6 +54,7 @@ namespace Grand.Web
             services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                //port can be configured in launchsetting.json
                 //options.HttpsPort = 5001;
             });
 
