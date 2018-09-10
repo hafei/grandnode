@@ -15,6 +15,7 @@ namespace Grand.Core.Infrastructure
         [MethodImpl(MethodImplOptions.Synchronized)] 
         public static IEngine Create()
         {
+            //单例模式 
             //create GrandEngine as engine
             if (Singleton<IEngine>.Instance == null)
                 Singleton<IEngine>.Instance = new GrandEngine();
@@ -41,6 +42,7 @@ namespace Grand.Core.Infrastructure
         /// </summary>
         public static IEngine Current
         {
+            //获取单例模式的实例
             get
             {
                 if (Singleton<IEngine>.Instance == null)

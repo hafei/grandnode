@@ -26,10 +26,13 @@ namespace Grand.Web
 
         public Startup(IHostingEnvironment environment)
         {
+            //初始化配置文件
             //create configuration
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
+                //加载json配置文件
                 .AddJsonFile("App_Data/appsettings.json", optional: false, reloadOnChange: true)
+                //加载环境变量  数据库连接 数据库驱动
                 .AddEnvironmentVariables()
                 .Build();
         }
@@ -58,6 +61,7 @@ namespace Grand.Web
                 //options.HttpsPort = 5001;
             });
 
+            //
             return services.ConfigureApplicationServices(Configuration);
         }
 
@@ -70,8 +74,9 @@ namespace Grand.Web
         {
             //enable https
             application.UseHsts();
+            //开启https重定向
             application.UseHttpsRedirection();
-
+            //
             application.ConfigureRequestPipeline();
         }
     }
