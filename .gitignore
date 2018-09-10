@@ -171,4 +171,4 @@ Grand.Web/App_Data/TempUploads/*
 
 
 # Rider  Jetbrains
-.idea
+.idea/*
