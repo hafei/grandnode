@@ -142,7 +142,7 @@ namespace Grand.Core.Infrastructure
         public void Initialize(IServiceCollection services)
         {
             //set base application path
-            var provider = services.BuildServiceProvider();
+            var provider = services.BuildServiceProvider(); //默认依赖注入容器
             var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
             var grandConfig = provider.GetRequiredService<GrandConfig>();
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
